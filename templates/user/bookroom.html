@@ -1,0 +1,83 @@
+{% extends 'basic.html' %} {% block title %}Book Room {% endblock title %} {% block body %}
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6 col-lg-6 col-xlg-6 col-sm-12 mx-auto my-4 ">
+
+            <form action="/user/book-room/book" method="POST">
+                {%csrf_token%}
+                {%load app_tags%}
+               
+                <div class="form-group">
+                    <label for="person">username:</label>
+                    <input type="text" class="form-control " id="username" name="username" required="true" value={{request.user}}>
+                </div>
+                <div class="form-group">
+                    <label for="person">Person:</label>
+                    <input type="number" class="form-control " id="person" name="person" min="1" max={{room.capacity}} required="true" value={{room.capacity}}>
+                </div>
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" class="form-control" id="first_name" placeholder="First Name" name="fname" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="lname" required>
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number:</label>
+                    <input type="text" class="form-control" id="mobile" placeholder="Mobile Number" name="mobile" required>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="password2">Check-in:</label>
+                    <input type="date" class="form-control" id="cin" min="{% todays_date %}" max="{% max_date %}" placeholder="Check-in" name="check_in" required="true" onchange="updateCheckOutDate()">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="password2">Check-Out:</label>
+                    <input type="date" class="form-control" id="cout" min="{% tommorow %}" max="{% max_date %}" placeholder="Check-out" name="check_out" required="true" onchange="validateCheckOutDate()">
+                    <small id="date-error" class="text-danger"></small>
+                  </div>
+                <div class="form-group">
+                    <label for="username">Room Type:</label>
+                    <input type="text" class="form-control " id="roomtype" name="roomtype" disabled value={{room.get_room_type_display}}>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Price:</label>
+                    <input type="number" class="form-control " id="price" placeholder="price " name="price" disabled value={{room.price}}>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Book Now</button>
+                <input type="hidden" name="room_id" value={{room.id}}>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateCheckOutDate() {
+      const checkInDate = new Date(document.getElementById('cin').value);
+      const checkOutDate = new Date(checkInDate.getTime() + 24 * 60 * 60 * 1000);
+      const checkOutInput = document.getElementById('cout');
+      checkOutInput.valueAsDate = checkOutDate;
+      checkOutInput.min = checkOutInput.value;  // Set minimum date to check-out date
+      validateCheckOutDate();  // Validate check-out date when check-in date is changed
+    }
+  
+    function validateCheckOutDate() {
+      const checkInDate = new Date(document.getElementById('cin').value);
+      const checkOutDate = new Date(document.getElementById('cout').value);
+      const errorElement = document.getElementById('date-error');
+  
+      if (checkOutDate <= checkInDate) {
+        errorElement.textContent = "Check-out date should be after the check-in date.";
+      } else {
+        errorElement.textContent = "";
+      }
+    }
+  </script>
+{% endblock body %}

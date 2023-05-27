@@ -1,0 +1,50 @@
+    {% extends 'basic.html' %}
+    {% block title %}Hotel Krishna
+    {% endblock title %}
+    {% block body %}
+     <!--Booking Section starts here-->
+   
+
+
+    <h3 class="text-center text-dark">Rooms Types</h3>
+
+    <!--Room tables starts here-->
+    <div class="container-fluid px-0" style="border:1px solid red">
+
+        <table class="table table-striped">
+            
+        
+          
+            {% for r in rooms %}
+                <tr>
+                    <td class="text-center">
+                        <!--Room details-->
+                        <h1>Room No: : {{ r.roomnumber }} </h1>
+                        <p>Price:${{ r.price }} /day</p>
+
+                        
+                        <p>Capacity :Max person {{ r.capacity }} </p>
+
+                        <p>Type : {{ r.get_room_type_display }} </p>
+                       
+                        <a href="/user/book-room?roomid={{r.id}}"><button class="btn btn-warning">Book Now</button></a>
+                    </td>
+                   
+                    <td class="text-center">
+                        
+                        <!--Room Images-->
+                        <img src="media/{{r.image}}" alt="" height="400px" width="300px" class="img-fluid pt-4">
+                    </td>
+
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+        </table>
+    </div>
+    <!--Roo tables ends here-->
+
+    
+    {% endblock body %}
+   
+   
